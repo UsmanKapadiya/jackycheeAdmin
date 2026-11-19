@@ -8,6 +8,7 @@ import Categories from './Categories.jsx';
 import PagesList from './PagesList.jsx';
 import PageForm from './PageForm.jsx';
 import Settings from './Settings.jsx';
+import { setFavicon } from './favicon.js';
 import { SITE_URL } from './config.js';
 import './admin.css';
 
@@ -16,6 +17,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export default function AdminApp() {
   const [user, setUser] = useState(null);
+  const [logoUrl, setLogoUrl] = useState(null);
   const [checking, setChecking] = useState(true);
   const navigate = useNavigate();
 
@@ -39,10 +41,21 @@ export default function AdminApp() {
       .finally(() => setChecking(false));
   }, [signOut]);
 
+  useEffect(() => {
+    if (!user) return;
+    adminApi
+      .settings()
+      .then(({ data }) => {
+        setLogoUrl(data.logo_url);
+        setFavicon(data.logo_url);
+      })
+      .catch((err) => console.error('Unable to load site logo for favicon.', err));
+  }, [user]);
+
   if (checking) return <div className="loading">Loading…</div>;
 
   return (
-    <AuthContext.Provider value={{ user, setUser, signOut }}>
+    <AuthContext.Provider value={{ user, setUser, logoUrl, setLogoUrl, signOut }}>
       <Routes>
         <Route path="login" element={user ? <Navigate to="/" replace /> : <Login />} />
         <Route element={user ? <AdminLayout /> : <Navigate to="/login" replace />}>
@@ -63,7 +76,7 @@ export default function AdminApp() {
 }
 
 function AdminLayout() {
-  const { user, signOut } = useAuth();
+  const { user, logoUrl, signOut } = useAuth();
 
   const logout = async () => {
     try {
@@ -76,7 +89,10 @@ function AdminLayout() {
   return (
     <div className="admin">
       <aside className="admin-side">
-        <p className="admin-brand">Jacky Chee · Admin</p>
+        <div className="admin-brand">
+          {logoUrl && <img src={logoUrl} alt="Site logo" />}
+          <span>Jacky Chee · Admin</span>
+        </div>
         <nav>
           <NavLink to="/portfolio">Portfolio</NavLink>
           <NavLink to="/categories">Categories</NavLink>

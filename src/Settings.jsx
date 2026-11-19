@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { adminApi } from './api.js';
+import { useAuth } from './AdminApp.jsx';
+import { setFavicon } from './favicon.js';
 import { Alert, Field, errorMessage } from './ui.jsx';
 
 export default function Settings() {
+  const { logoUrl, setLogoUrl } = useAuth();
   const [form, setForm] = useState({ site_name: '', site_tagline: '', footer_text: '', seo_description: '' });
-  const [logoUrl, setLogoUrl] = useState(null);
   const [pw, setPw] = useState({ current_password: '', password: '', password_confirmation: '' });
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
@@ -17,6 +19,7 @@ export default function Settings() {
       seo_description: data.seo_description ?? '',
     });
     setLogoUrl(data.logo_url);
+    setFavicon(data.logo_url);
   };
 
   useEffect(() => {
