@@ -17,8 +17,8 @@ Options -Indexes -MultiViews
   Header always set Referrer-Policy "no-referrer"
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" "expr=%{HTTPS} == 'on'"
-  # Change api.jackychee.com below if your API lives on another domain
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://api.jackychee.com; connect-src 'self' https://api.jackychee.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+  # Change backend.jackychee.com below if your API lives on another domain
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://backend.jackychee.com; connect-src 'self' https://backend.jackychee.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
   Header set Cache-Control "no-store" "expr=%{REQUEST_URI} =~ m#(^/$|\.html$)#"
 </IfModule>
 
